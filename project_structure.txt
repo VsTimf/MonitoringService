@@ -1,0 +1,13 @@
+.
+├── cmd
+│   ├── agent
+│   │   └── main.go
+│   ├── client
+│   │   └── main.go
+│   └── server
+│       └── main.go
+├── internal
+├── Makefile
+└── project_structure.txt
+
+6 directories, 5 files
