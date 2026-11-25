@@ -12,7 +12,7 @@ TARGET_SERVER_BIN=$(BUILD_DIR)/$(APP_SERVER_NAME)
 TARGET_CLIENT_BIN=$(BUILD_DIR)/$(APP_CLIENT_NAME)
 TARGET_AGENT_BIN=$(BUILD_DIR)/$(APP_AGENT_NAME)
 
-.PHONY: all build run clean showdb
+.PHONY: all build run proto clean showdb 
 
 
 all: build
@@ -53,9 +53,17 @@ run: build
 	kill $$server_pid 2>/dev/null || true
 
 
+
+proto:
+	protoc --go_out=. --go_opt=module=monitoring \
+	--go-grpc_out=. --go-grpc_opt=module=monitoring \
+	proto/metrics/v1/metrics.proto
+
+
+
 LIMIT ?= 10
 showdb:
-	@sqlite3 -box metrics.db "SELECT id, host, cpu_usage, ram_usage, datetime(timestamp, 'unixepoch', 'localtime') AS date_time FROM metrics ORDER BY id DESC LIMIT $(LIMIT);"
+	@sqlite3 -box database/monitoring.db "SELECT id, host, cpu_usage, ram_usage, datetime(timestamp, 'unixepoch', 'localtime') AS date_time FROM metrics ORDER BY id DESC LIMIT $(LIMIT);"
 
 
 clean:

@@ -1,1 +1,22 @@
+# Скомпилированные бинарники
 /build
+agent
+server
+client
+*.exe
+
+# Файлы базы данных SQLite и её системные журналы
+*.db
+*.db-wal
+*.db-shm
+/database/*.db
+/database/*.db-*
+
+# Настройки редакторов и IDE
+.idea/
+.vscode/
+*.swp
+
+# Логи и временные файлы ОС
+*.log
+.DS_Store

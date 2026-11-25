@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package metrics.v1;
+
+// Куда генератор положит Go-код:
+// "путь_внутри_модуля;имя_go_пакета"
+option go_package = "monitoring/pkg/api/metrics/v1;metricsv1";
+
+// Описание RPC-сервиса (набор доступных функций)
+service MetricsService {
+  rpc GetHistory(GetHistoryRequest) returns (GetHistoryResponse);
+  rpc StreamMetrics(StreamMetricsRequest) returns (stream StreamMetricsResponse);
+}
+
+// Запрос на получение истории
+message GetHistoryRequest {
+  int32 limit = 1;
+}
+
+// Ответ со списком метрик
+message GetHistoryResponse {
+  repeated MetricSnapshot metrics = 1; // repeated в Go станет слайсом []*MetricSnapshot
+}
+
+// Запрос на стрим метрик
+message StreamMetricsRequest {}
+
+// Обертка для стрима по стандарту API
+message StreamMetricsResponse {
+  MetricSnapshot metric = 1;
+}
+
+// Сама структура метрики
+message MetricSnapshot {
+  string host = 1;
+  double cpu_usage = 2;
+  uint64 ram_usage = 3;
+  int64 timestamp = 4; // Unix-время в секундах
+}
