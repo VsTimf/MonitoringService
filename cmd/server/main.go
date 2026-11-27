@@ -39,7 +39,9 @@ func main() {
 		logger.Info("test read success", "count", len(latest), "data", latest)
 	}
 
-	scraper, _ := server.NewScraper("http://localhost:8080", dbStorage, logger)
+	hub := server.NewHub()
+
+	scraper, _ := server.NewScraper("http://localhost:8080", dbStorage, hub, logger)
 
 	var wg sync.WaitGroup
 
@@ -60,7 +62,7 @@ func main() {
 	grpcServer := grpc.NewServer()
 
 	// 3. Регистрируем наш сервис и включаем рефлексию для grpcurl
-	metricsService := server.NewGRPCServer(dbStorage)
+	metricsService := server.NewGRPCServer(dbStorage, hub, logger)
 	metricsv1.RegisterMetricsServiceServer(grpcServer, metricsService)
 	reflection.Register(grpcServer) // <--- ВОТ ОНА, МАГИЯ ДЛЯ ОТЛАДКИ!
 
